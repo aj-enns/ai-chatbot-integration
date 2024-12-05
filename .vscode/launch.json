@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        
+        {
+            "type": "debugpy",
+            "request": "launch",
+            "name": "Flask App",
+            "program": "${workspaceFolder}/app.py",
+            "envFile": "${workspaceFolder}/.env",
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "autoReload": true,
+            "console": "integratedTerminal"
+        }
+    ]
+}

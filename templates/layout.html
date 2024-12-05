@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>SnapVault</title>
+  <!-- Bootstrap CSS from CDN -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Bot Framework Web Chat CSS from CDN -->
+  <link rel="stylesheet" href="https://cdn.botframework.com/botframework-webchat/latest/webchat.css">
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="{{ url_for('index') }}">Chatbox Example</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+  </nav>
+
+  <div class="container">
+    {% block content %}{% endblock %}
+  </div>
+  <!-- Fixed Footer -->
+  <footer class="footer fixed-bottom bg-light">
+    <div class="container">
+      <!-- Chatbot Collapsible Panel -->
+      <div class="d-flex justify-content-between align-items-center position-relative">
+        <div class="ml-auto">
+          <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#chatbotPanel"
+            aria-expanded="false" aria-controls="chatbotPanel">
+            Chatbot
+          </button>
+        </div>
+        <div class="collapse position-absolute" id="chatbotPanel" style="bottom: 50px; right: 0; width: 450px;">
+          <div class="card card-body">
+            <div id="webchat" style="width: 100%; height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- jQuery and Bootstrap JS from CDN -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Bot Framework Web Chat JS from CDN -->
+  <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+  <script>
+    // Initialize Web Chat when the collapsible panel is shown
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOMContentLoaded event fired');
+      $('#chatbotPanel').on('shown.bs.collapse', async function () {
+        console.log('Panel shown, initializing Web Chat...');
+        try {
+          const response = await fetch('/generate_token');
+          const data = await response.json();
+          if (!data.token) throw new Error('Token not found');
+          console.log('Token:', data.token);
+          const token = data.token;
+
+          const styleOptions = {
+            botAvatarInitials: 'BF',
+            userAvatarInitials: 'WC'
+          };
+
+          window.WebChat.renderWebChat(
+            {
+              directLine: window.WebChat.createDirectLine({
+                token: token
+              }),
+              userID: 'aj.enns',
+              username: 'Web Chat User',
+              locale: 'en-US',
+              styleOptions
+            },
+            document.getElementById('webchat')
+          );
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

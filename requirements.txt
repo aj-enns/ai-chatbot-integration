@@ -1,0 +1,9 @@
+authlib
+Flask==2.2.2
+flask-login
+flask-cors
+gunicorn
+jsonify
+python_dotenv
+requests
+Werkzeug==2.2.2

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+   <body>
+    
+      <div id="webchat" role="main"></div>
+      <script src="https://cdn.botframework.com/botframework-webchat/latest/webchat.js"></script>
+      <script>
+         async function initializeWebChat() {
+            try {
+               const response = await fetch('/generate_token');
+               const data = await response.json();
+               if (!data.token) throw new Error('Token not found');
+               console.log(data.token);
+               const token = data.token;
+
+               // Set style options.
+               const styleOptions = {
+                  botAvatarInitials: 'BF',
+                  userAvatarInitials: 'WC'
+               };
+
+               window.WebChat.renderWebChat(
+                  {
+                     directLine: window.WebChat.createDirectLine({
+                        token: token
+                     }),
+                     userID: 'aj.enns',
+                     username: 'Web Chat User',
+                     locale: 'en-US',
+                     styleOptions
+                  },
+                  document.getElementById('webchat')
+               );
+            } catch (error) {
+               console.error('Error:', error);
+            }
+         }
+
+         // Initialize Web Chat
+         initializeWebChat();
+      </script>
+   </body>
+</html>
