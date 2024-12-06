@@ -4,6 +4,7 @@ flask-login
 flask-cors
 gunicorn
 jsonify
+oauthlib
 python_dotenv
 requests
 Werkzeug==2.2.2
