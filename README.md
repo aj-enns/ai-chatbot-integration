@@ -55,3 +55,44 @@ def generate_token():
 ```
 
 This endpoint uses the bot secret token to request a new token from the bot service, which is then used to authenticate the chat bot.
+
+Then in your front end, you use the token like this:
+
+```javascript
+  <script>
+    // Initialize Web Chat when the collapsible panel is shown
+    document.addEventListener('DOMContentLoaded', function () {
+      console.log('DOMContentLoaded event fired');
+      $('#chatbotPanel').on('shown.bs.collapse', async function () {
+        console.log('Panel shown, initializing Web Chat...');
+        try {
+          const response = await fetch('/generate_token');
+          const data = await response.json();
+          if (!data.token) throw new Error('Token not found');
+          console.log('Token:', data.token);
+          const token = data.token;
+
+          const styleOptions = {
+            botAvatarInitials: 'BF',
+            userAvatarInitials: 'WC'
+          };
+
+          window.WebChat.renderWebChat(
+            {
+              directLine: window.WebChat.createDirectLine({
+                token: token
+              }),
+              userID: 'aj.enns',
+              username: 'Web Chat User',
+              locale: 'en-US',
+              styleOptions
+            },
+            document.getElementById('webchat')
+          );
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      });
+    });
+  </script>
+  ```
