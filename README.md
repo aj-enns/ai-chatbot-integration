@@ -17,6 +17,20 @@ This repository demonstrates how to integrate the Copilot Studio Chat bot into a
 
 The bot secret token is a crucial part of the integration process. It is used to authenticate requests to the bot service. Ensure that you keep this token secure and do not expose it in your code.
 
+
+### Enable the Copilot Studio Agent to support Direct Line Security
+
+As the user interface changes, you should refer to this [documentation](https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-web-security).
+
+The goal is to enable Web Channel Security and have the chabot enable Secret.
+![image](https://github.com/user-attachments/assets/f9d1d67a-0ea6-4909-916e-33aa13453232)
+
+![image](https://github.com/user-attachments/assets/d77ffade-9842-4663-b0af-b1f0c1549f1a)
+
+
+
+
+
 ### Setting Up the Bot Secret Token
 
 To set up the bot secret token, follow these steps:
