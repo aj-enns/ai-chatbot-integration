@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 import os
 import requests
 from flask import Flask, redirect, render_template, request, send_from_directory, url_for, session, jsonify
+from celery import Celery
+import shutil
 
 # Load .env file if it exists
 load_dotenv()
@@ -10,6 +12,12 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "supersecretkey")
 app.config['PREFERRED_URL_SCHEME'] = 'https'
 
+# Celery configuration
+app.config['CELERY_BROKER_URL'] = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+app.config['CELERY_RESULT_BACKEND'] = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
 
 BOT_SECRET = os.getenv("BOT_SECRET")
 
@@ -55,6 +63,24 @@ def generate_token():
         return jsonify({"token": token})
     else:
         return jsonify({"error": "Failed to generate token"}), 500
+
+@app.route('/delete_album', methods=['POST'])
+def delete_album():
+    album_id = request.form.get('album_id')
+    if album_id:
+        delete_album_task.delay(album_id)
+        return jsonify({"status": "Album deletion in progress"}), 202
+    else:
+        return jsonify({"error": "Album ID is required"}), 400
+
+@celery.task
+def delete_album_task(album_id):
+    album_path = os.path.join('albums', album_id)
+    if os.path.exists(album_path):
+        shutil.rmtree(album_path)
+        return {"status": "Album deleted successfully"}
+    else:
+        return {"error": "Album not found"}
 
 if __name__ == '__main__':
     app.run(debug=True)
